@@ -149,12 +149,3 @@ Shoulda::Matchers.configure do |config|
     with.library :action_controller
   end
 end
-
-# Configure rspec to use fog mocks
-Fog.mock!
-service = Fog::Storage.new({
-                             provider: 'AWS',
-                             aws_access_key_id: 'fake_access_key_id',
-                             aws_secret_access_key: 'fake_secret_access_key'
-                           })
-service.directories.create(key: 'testbucket')

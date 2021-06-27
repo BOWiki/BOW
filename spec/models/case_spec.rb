@@ -36,70 +36,52 @@ RSpec.describe Case do
 end
 
 describe 'versioning', versioning: true do
-  it 'starts versioning when a new case is created' do
-    this_case = FactoryBot.create(:case)
-    expect(this_case.versions.size).to eq 1
-    expect(this_case.versions.map(&:event)).to eq %w[create]
-  end
 
   it 'adds a version when the title is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:title, 'A New Title')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
+    old_title = this_case.title
+    this_case.update!(title: 'A New Title')
+    expect(this_case).to have_a_version_with title: old_title
   end
 
   it 'adds a version when the overview is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:overview, 'An Old Case')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
+    old_overview = this_case.overview
+    this_case.update!(overview: 'An Old Case')
+    expect(this_case).to have_a_version_with overview: old_overview
   end
 
   it 'adds a version when the date is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:date, (Time.current - 1.day))
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
+    old_date = this_case.date
+    this_case.update!(date: Date.current.yesterday)
+    expect(this_case).to have_a_version_with date: old_date
   end
 
   it 'adds a version when the city is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:city, 'Buffalo')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
-  end
-
-  it 'adds a version when the avatar is changed' do
-    this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:avatar, 'new_avatar')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
+    old_city = this_case.city
+    this_case.update!(city: 'Buffalo')
+    expect(this_case).to have_a_version_with city: old_city
   end
 
   it 'adds a version when the video url is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:video_url, 'new_video.com')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
+    old_video_url = this_case.video_url
+    this_case.update!(video_url: 'new_video.com')
+    expect(this_case).to have_a_version_with video_url: old_video_url
   end
 
   it 'adds a version when the slug is changed' do
     this_case = FactoryBot.create(:case)
-    this_case.update_attribute(:slug, 'joel-osteen')
-    expect(this_case.versions.size).to eq 2
-    expect(this_case.versions.map(&:event)).to eq %w[create update]
-  end
-
-  it 'does not add a version when the attribute is the same' do
-    this_case = FactoryBot.create(:case, title: 'The Title')
-    this_case.update_attribute(:title, 'The Title')
-    expect(this_case.versions.size).to eq 1
+    old_slug = this_case.slug
+    this_case.update!(slug: 'joel-osteen')
+    expect(this_case).to have_a_version_with slug: old_slug
   end
 
   it 'copies the this_case.summary attribute to version.comment' do
     this_case = FactoryBot.create(:case, title: 'The Title')
-    this_case.update_attributes(title: 'The Title has changed', summary: 'fixed the title')
+    this_case.update!(title: 'The Title has changed', summary: 'fixed the title')
     expect(this_case.versions.last.comment).to eq 'fixed the title'
   end
 end

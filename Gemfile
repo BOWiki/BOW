@@ -90,7 +90,7 @@ gem 'devise', '4.7.3'
 gem 'simple_form', '5.0'
 
 # for aws cloud storage
-gem 'fog', '2.2'
+gem 'fog-aws', '~> 3.10'
 # photo resizing
 gem 'mini_magick', '~> 4.10'
 # file upload solution
